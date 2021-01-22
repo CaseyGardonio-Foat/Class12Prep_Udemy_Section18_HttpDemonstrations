@@ -9,7 +9,8 @@ import { Post } from './post.model'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  loadedPosts = [];
+  loadedPosts: Post[] = [];
+  isFetching = false;
 
   constructor(private http: HttpClient) {}
 
@@ -35,6 +36,7 @@ export class AppComponent implements OnInit {
   }
 
   private fetchPosts() {
+    this.isFetching = true;
     this.http
       .get<{[key: string]: Post}>('https://class12-udemy18-19-default-rtdb.firebaseio.com/class12-udemy18-19-default-rtdb/class12-udemy18-19-default-rtdb.json')
       .pipe(
@@ -49,7 +51,8 @@ export class AppComponent implements OnInit {
         })
       )
       .subscribe(posts =>{
-      console.log(posts);
-    });
+        this.isFetching = false;
+        this.loadedPosts = posts;
+      });
   }
 }
