@@ -58,10 +58,13 @@
           <p>{{ post.content }}</p>
         </li>
       </ul>
-      <!-- <h1 *ngIf="isFetching">Loading...</h1> -->
+      <h1 *ngIf="isFetching">Loading...</h1>
       <!--alternative display using a bootstrap spinner-->
-      <div class="spinner-border text-success" role="status" *ngIf="isFetching">
+      <!-- <div class="spinner-border text-success" role="status" *ngIf="isFetching && !error">
         <span class="sr-only">Loading...</span>
+      </div> -->
+      <div class="alert alert-danger" *ngIf="error">{{ error }} 
+        <button class="btn btn-danger" (click)="onHandleError()">dismiss</button>
       </div>
     </div>
   </div>
