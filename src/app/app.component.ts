@@ -14,11 +14,15 @@ export class AppComponent implements OnInit, OnDestroy {
   loadedPosts: Post[] = [];
   isFetching = false;
   error = null;
-  errorSubscription = new Subscription;
+  private errorSubscription: Subscription;
 
   constructor(private http: HttpClient, private postsService: PostsService) {}
 
   ngOnInit() {
+    this.errorSubscription = this.postsService.error.subscribe(errorMessage => {
+      this.error = errorMessage;
+    });
+
     this.isFetching = true;
     this.postsService.fetchPosts().subscribe(posts =>{
       this.isFetching = false;
@@ -29,7 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  onCreatePost(postData: { title: string; content: string }) {
+  onCreatePost(postData: Post) {
     this.postsService.createAndStorePost(postData.title, postData.content);
     this.onFetchPosts();
   }

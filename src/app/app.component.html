@@ -58,7 +58,7 @@
           <p>{{ post.content }}</p>
         </li>
       </ul>
-      <h1 *ngIf="isFetching">Loading...</h1>
+      <h1 *ngIf="isFetching && !error">Loading...</h1>
       <!--alternative display using a bootstrap spinner-->
       <!-- <div class="spinner-border text-success" role="status" *ngIf="isFetching && !error">
         <span class="sr-only">Loading...</span>
