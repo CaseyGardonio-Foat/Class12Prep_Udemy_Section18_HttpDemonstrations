@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpEventType, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Post } from "./post.model";
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
@@ -13,9 +13,12 @@ export class PostsService{
   createAndStorePost(title: string, content: string) {
     const postData: Post = {title: title, content: content};
     // Send Http request
-    this.http.post<{[key: string]: Post}>('https://class12-udemy18-19-default-rtdb.firebaseio.com/class12-udemy18-19-default-rtdb/class12-udemy18-19-default-rtdb.json', postData)
+    this.http.post<{[key: string]: Post}>('https://class12-udemy18-19-default-rtdb.firebaseio.com/class12-udemy18-19-default-rtdb/class12-udemy18-19-default-rtdb.json', postData,
+    {
+      observe: "response"
+    })
     .subscribe(responseData=>{
-        console.log(responseData);
+        console.log(responseData.body);
     }, error => {
       this.error.next(error.message);
     });
@@ -45,6 +48,12 @@ export class PostsService{
   } 
 
   clearPosts() {
-    return this.http.delete('https://class12-udemy18-19-default-rtdb.firebaseio.com/class12-udemy18-19-default-rtdb/class12-udemy18-19-default-rtdb.json');
+    return this.http.delete('https://class12-udemy18-19-default-rtdb.firebaseio.com/class12-udemy18-19-default-rtdb/class12-udemy18-19-default-rtdb.json', {observe: 'events'})
+    .pipe(tap(event =>{
+      console.log(event);
+      if(event.type === HttpEventType.Response) {
+        console.log(event.body);
+      }
+    }));
   }
 }
