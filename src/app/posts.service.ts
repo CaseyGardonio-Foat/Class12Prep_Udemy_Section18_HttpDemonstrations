@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Post } from "./post.model";
 import { map, catchError } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs';
@@ -23,7 +23,11 @@ export class PostsService{
 
   fetchPosts() {
     return this.http
-    .get<{[key: string]: Post}>('https://class12-udemy18-19-default-rtdb.firebaseio.com/class12-udemy18-19-default-rtdb/class12-udemy18-19-default-rtdb.json')
+    .get<{[key: string]: Post}>('https://class12-udemy18-19-default-rtdb.firebaseio.com/class12-udemy18-19-default-rtdb/class12-udemy18-19-default-rtdb.json',
+    {
+     headers: new HttpHeaders({'Custom-Header': 'Hello'}),
+     params: new HttpParams().set('print', 'pretty')
+    })
     .pipe(
       map(responseData =>{
         const postsArray: Post[] = [];
